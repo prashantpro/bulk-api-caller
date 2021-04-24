@@ -26,8 +26,8 @@ public class DefaultRetryableRestApiCaller implements RetryableRestApiCaller {
   }
 
   @Override
-  public ApiResponse invoke(String url, Map<String, String> requestHeaders,
-      RetryPolicy retryPolicy) {
+  public ApiResponse invoke(
+      String url, Map<String, String> requestHeaders, RetryPolicy retryPolicy) {
     return null;
   }
 
@@ -37,7 +37,9 @@ public class DefaultRetryableRestApiCaller implements RetryableRestApiCaller {
   }
 
   @Override
-  public <T> ApiResponse invoke(String url, String requestPayload,
+  public <T> ApiResponse invoke(
+      String url,
+      String requestPayload,
       Map<String, String> requestHeaders,
       RetryPolicy retryPolicy) {
 
@@ -46,8 +48,11 @@ public class DefaultRetryableRestApiCaller implements RetryableRestApiCaller {
     requestBuilder.setHeader("Content-Type", "application/json");
     requestHeaders.forEach(requestBuilder::setHeader);
 
-    final HttpRequest request = requestBuilder.timeout(Duration.ofSeconds(10))
-        .POST(BodyPublishers.ofString(requestPayload)).build();
+    final HttpRequest request =
+        requestBuilder
+            .timeout(Duration.ofSeconds(10))
+            .POST(BodyPublishers.ofString(requestPayload))
+            .build();
     log.debug("Request body {}", requestPayload);
     try {
       HttpResponse<String> httpResponse = client.send(request, BodyHandlers.ofString());
@@ -62,8 +67,5 @@ public class DefaultRetryableRestApiCaller implements RetryableRestApiCaller {
     }
 
     return null;
-
   }
-
-
 }

@@ -38,5 +38,9 @@ public class ApiRequest {
     this.associatedData = associatedData;
   }
 
-  public enum HttpRequestMethod {GET, POST, DELETE}
+  public enum HttpRequestMethod {
+    GET,
+    POST,
+    DELETE
+  }
 }

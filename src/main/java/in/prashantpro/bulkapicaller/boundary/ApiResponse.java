@@ -46,10 +46,16 @@ public class ApiResponse<T> {
   @Override
   public String toString() {
     return "ApiResponse{"
-        + "statusCode=" + statusCode
-        + ", responseHeaders=" + responseHeaders
-        + ", responseBodyString='" + responseBodyString + '\''
-        + ", responseBody='" + responseBody + '\''
+        + "statusCode="
+        + statusCode
+        + ", responseHeaders="
+        + responseHeaders
+        + ", responseBodyString='"
+        + responseBodyString
+        + '\''
+        + ", responseBody='"
+        + responseBody
+        + '\''
         + '}';
   }
 }

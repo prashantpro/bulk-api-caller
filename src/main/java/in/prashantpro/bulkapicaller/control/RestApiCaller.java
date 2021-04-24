@@ -12,5 +12,4 @@ public interface RestApiCaller {
   <T> ApiResponse invoke(String url, T requestPayload);
 
   <T> ApiResponse invoke(String url, T requestPayload, Map<String, String> requestHeaders);
-
 }

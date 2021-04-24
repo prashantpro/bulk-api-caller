@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 public class ApiBulkExecutor {
 
   private static final Logger log = LoggerFactory.getLogger(ApiBulkExecutor.class);
-  //Stats generated as part of processing the requests
+  // Stats generated as part of processing the requests
   private Map<Integer, Integer> responses = new ConcurrentHashMap<>();
 
   private RetryPolicy retryPolicy;
@@ -37,8 +37,7 @@ public class ApiBulkExecutor {
   private RetryableRestApiCaller retryableRestApiCaller;
   private Duration timeTaken;
 
-  private ApiBulkExecutor() {
-  }
+  private ApiBulkExecutor() {}
 
   public static ApiBulkExecutorBuilder builder() {
     return new ApiBulkExecutorBuilder();
@@ -52,8 +51,11 @@ public class ApiBulkExecutor {
       futures.add(invoke(request));
     }
 
-    List<ApiResponse> result = futures.stream().map(CompletableFuture::join)
-        .filter(Objects::nonNull).collect(Collectors.toList());
+    List<ApiResponse> result =
+        futures.stream()
+            .map(CompletableFuture::join)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
 
     this.timeTaken = Duration.between(start, Instant.now());
     return result;
@@ -69,28 +71,33 @@ public class ApiBulkExecutor {
 
   private CompletableFuture<ApiResponse> invoke(ApiRequest request) {
     CompletableFuture<ApiResponse> future =
-        CompletableFuture.supplyAsync(() -> retryableRestApiCaller
-            .invoke(request.getUrl(), request.getRequestBody(), this.headers,
-                this.retryPolicy), executor)
-            .exceptionally(ex -> {
-              log.error("Something went wrong", ex);
-              return null;
-            });
+        CompletableFuture.supplyAsync(
+                () ->
+                    retryableRestApiCaller.invoke(
+                        request.getUrl(), request.getRequestBody(), this.headers, this.retryPolicy),
+                executor)
+            .exceptionally(
+                ex -> {
+                  log.error("Something went wrong", ex);
+                  return null;
+                });
 
-    return future.thenApply(response -> {
-      Integer count = responses.getOrDefault(response.getStatusCode(), 0);
-      responses.put(response.getStatusCode(), ++count);
+    return future.thenApply(
+        response -> {
+          Integer count = responses.getOrDefault(response.getStatusCode(), 0);
+          responses.put(response.getStatusCode(), ++count);
 
-      try {
-        if(this.mapper != null) {
-          final Object responseBody = this.mapper.map(request, response.getResponseBodyString());
-          response.setResponseBody(responseBody);
-        }
-      } catch (Exception e) {
-        log.error("Failed to map response", e);
-      }
-      return response;
-    });
+          try {
+            if (this.mapper != null) {
+              final Object responseBody =
+                  this.mapper.map(request, response.getResponseBodyString());
+              response.setResponseBody(responseBody);
+            }
+          } catch (Exception e) {
+            log.error("Failed to map response", e);
+          }
+          return response;
+        });
   }
 
   public static class ApiBulkExecutorBuilder {
@@ -211,7 +218,5 @@ public class ApiBulkExecutor {
       }
       apiBulkExecutor.requests = this.requests;
     }
-
-
   }
 }
