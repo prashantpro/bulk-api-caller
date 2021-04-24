@@ -32,7 +32,7 @@ public class ApiResponse<T> {
   }
 
   public void setResponseBodyString(String responseBody) {
-    this.responseBodyString = responseBodyString;
+    this.responseBodyString = responseBody;
   }
 
   public T getResponseBody() {
